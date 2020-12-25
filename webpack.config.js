@@ -1,35 +1,35 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpackBar = require('webpackbar')
-
-
-const progreesHandler = percentage => console.log(percentage)
 
 module.exports = {
-  entry: './src/index.jsx',
+  entry: path.resolve(__dirname, 'src/app.js'),
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
   },
-  plugins: [
-    new HtmlWebpackPlugin(),
-    new webpackBar()
-  ],
+  mode: 'development',
+  devServer: {
+    open: true
+  },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
-      }
-    ]
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css$/i,
+        exclude: /node_modules/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+    ],
   },
-  resolve: {
-    extensions: ['*', '.js', '.jsx'],
-  },  
-  devServer: {
-    contentBase: path.resolve(__dirname, './dist'),
-    quiet: true,
-    open: true
-  } 
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+    }),
+  ],
 };
